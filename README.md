@@ -643,6 +643,58 @@
 
                         }
 
+## Fetch all the sequnces which has introns from the previous output
+                i = 0
+                with open ("/home/roylab/swadha/phylogeny/nematodes_V2/step6_groupings/codons.txt", "r") as fname:
+                    for line in fname :
+                        arry = line.split("\t")
+                        i = i + 1
+                        l = len(arry)
+                        c1 = 1
+                        c3 = 0
+                        filename = "intron_pos_sequence_row_" + str(i) +  ".txt"
+                        with open (filename, "w") as g:
+                            for x in range (l):
+                                columnNo = x
+                                if any(c.islower() for c in (arry[x])):
+                                    with open ("/home/roylab/swadha/phylogeny/nematodes_V2/step6_groupings/codons.txt", "r") as fname2:
+                                        for line2 in fname2 :
+                                            arry2 = line2.split("\t")
+                                            g.writelines(arry2[x])
+                                    g.writelines("\n")
+                                    fname2.close()
+                        g.close()
+                fname.close()
 
+
+## to fetch intronless sequneces
+                import sys
+                from collections import defaultdict
+
+                datafile = sys.argv[1]
+
+                columnwise = defaultdict(list)
+
+                has_intron = set()
+
+                with open(datafile) as data:
+                    headers = data.readline().strip().split('\t')
+                    for row in data:
+                        columns = row.strip().split('\t')
+                        for index, c in enumerate(columns):
+                            if index in has_intron:
+                                continue
+                            name = headers[index]
+                            if not (c.isupper() or c == '---'):  # is intron
+                                has_intron.add(index)
+                                if name in columnwise:
+                                    del columnwise[name]
+                                continue
+                            # otherwise, no intron so add to column list
+                            columnwise[name].append(c)
+
+                for name, column_list in sorted(columnwise.items()):
+                    column_list.insert(0, name)
+                    print('\t'.join(column_list))
 
 

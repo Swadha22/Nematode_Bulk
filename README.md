@@ -1,4 +1,4 @@
-# nematodes
+# Analyzing 108 Nematode Species
 
 ## to run exint-master.pl program on 120 Nematode species. It will get all the annotated gene sequences (exons-introns) using the genome and GFF file. 
         use strict;
